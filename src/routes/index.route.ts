@@ -15,8 +15,20 @@ const router = createRouter()
         createMessageObjectSchema("Welcome to Small Basket!"),
         "Small Basket API welcome message",
       ),
+      [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+        createMessageObjectSchema("You are not logged in"),
+        "Unauthorized",
+      ),
     },
   }), (c) => {
+    const session = c.get("session");
+
+    if (!session) {
+      return c.json({
+        message: "Not logged In",
+      }, 401);
+    }
+
     return c.json({
       message: "Welcome to Small Basket!",
     });
